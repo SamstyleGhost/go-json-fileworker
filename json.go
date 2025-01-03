@@ -25,8 +25,20 @@ import (
 	since they would have different signatures and implementations I feel
 */
 
+/*
+	Additional info:
+	If the user passes a certain type in the generics and the object returned does not have certain fields, then they would be replaced with their zero values, unless the json is specified to omitempty. If the user doesnt want to conform to a particular type,they are advised to use any as the the type
+*/
+
 var (
-	json = jsoniter.ConfigCompatibleWithStandardLibrary
+	// This is taken from the jsoniter library docs.
+	// It has the configs for the jsoniter.ConfigCompatibleWithStandardLibrary API + DisallowUnknowFields set to true, so as to have typesafety in case the JSON is of different type than the type given
+	json = jsoniter.Config{
+		EscapeHTML:             true,
+		SortMapKeys:            true,
+		ValidateJsonRawMessage: true,
+		DisallowUnknownFields:  true,
+	}.Froze()
 )
 
 func GetAllObjects(pathToFile string, obj interface{}) error {
@@ -52,7 +64,18 @@ func GetAllObjects(pathToFile string, obj interface{}) error {
 	return nil
 }
 
-// When the JSON passed in is an array, then returning only the object
+/*
+Returns the individual object at the given index.
+Takes in the type that should be returned (This would help in typesafety as well as autocomplete)
+Returns error when:
+1. The file is not found
+2. There is some error reading the file contents
+3. The actual JSON content is not an array (need it to be an array to have an index for this one)
+4. The content received is not of the type passed in
+
+* Can pass in any as the type in the function if type is not known
+* The function works with optional field values as well
+*/
 func GetObjectFromIndex[T any](pathToFile string, index int) (T, error) {
 
 	var zeroVal T // This is the zero value for the datatype
@@ -84,11 +107,6 @@ func GetObjectFromIndex[T any](pathToFile string, index int) (T, error) {
 	return newObj[index], nil
 }
 
-func UpdateObjectThroughIndex(pathToFile string, obj interface{}) error {
-
-	return nil
-}
-
 // Will see if I can work on updating modularly if possible
 func SetAllObjects(pathToFile string, obj interface{}) error {
 	absPathToFile, _ := filepath.Abs(pathToFile)
@@ -111,4 +129,51 @@ func SetAllObjects(pathToFile string, obj interface{}) error {
 	}
 
 	return nil
+}
+
+// Appends entire object to the array in file
+// Does not yet work on arrays in individual fields
+func AppendObjectToArray[T any](pathToFile string, obj T) error {
+
+	absPathToFile, _ := filepath.Abs(pathToFile)
+
+	pathFile, err := os.OpenFile(absPathToFile, os.O_RDWR, os.ModePerm)
+	if err != nil {
+		return err
+	}
+
+	defer pathFile.Close()
+
+	byteValue, err := io.ReadAll(pathFile)
+	if err != nil {
+		return err
+	}
+
+	var objects []T
+	err = json.Unmarshal(byteValue, &objects)
+	if err != nil {
+		return err
+	}
+
+	objects = append(objects, obj)
+
+	updatedContents, err := json.MarshalIndent(objects, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	if err = pathFile.Truncate(0); err != nil {
+		return err
+	}
+	if _, err := pathFile.Seek(0, 0); err != nil { // Move to the beginning of the file
+		return err
+	}
+
+	_, err = pathFile.Write(updatedContents)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }

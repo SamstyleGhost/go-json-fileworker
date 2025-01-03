@@ -1,31 +1,31 @@
 package models
 
 type geo struct {
-	Lat string `json:"lat"`
-	Lng string `json:"lng"`
+	Lat string `json:"lat,omitempty"`
+	Lng string `json:"lng,omitempty"`
 }
 
 type address struct {
-	Street  string `json:"street"`
-	Suite   string `json:"suite"`
-	City    string `json:"city"`
-	ZipCode string `json:"zipcode"`
-	Geo     geo    `json:"geo"`
+	Street  string `json:"street,omitempty"`
+	Suite   string `json:"suite,omitempty"`
+	City    string `json:"city,omitempty"`
+	ZipCode string `json:"zipcode,omitempty"`
+	Geo     geo    `json:"geo,omitempty"`
 }
 
 type company struct {
-	Name        string `json:"name"`
-	CatchPhrase string `json:"catchPhrase"`
-	BS          string `json:"bs"`
+	Name        string `json:"name,omitempty"`
+	CatchPhrase string `json:"catchPhrase,omitempty"`
+	BS          string `json:"bs,omitempty"`
 }
 
 type Users struct {
-	ID       int     `json:"id"`
-	Name     string  `json:"name"`
-	Username string  `json:"username"`
-	Email    string  `json:"email"`
-	Address  address `json:"address"`
-	Phone    string  `json:"phone"`
-	Website  string  `json:"website"`
-	Company  company `json:"company"`
+	ID       int     `json:"id,omitempty"`
+	Name     string  `json:"name,omitempty"`
+	Username string  `json:"username,omitempty"`
+	Email    string  `json:"email,omitempty"`
+	Address  address `json:"address,omitempty"`
+	Phone    string  `json:"phone,omitempty"`
+	Website  string  `json:"website,omitempty"`
+	Company  company `json:"company,omitempty"`
 }
