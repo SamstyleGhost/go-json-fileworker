@@ -133,6 +133,7 @@ func SetAllObjects(pathToFile string, obj interface{}) error {
 
 // Appends entire object to the array in file
 // Does not yet work on arrays in individual fields
+// This function follows the Read-Modify-Write approach
 func AppendObjectToArray[T any](pathToFile string, obj T) error {
 
 	absPathToFile, _ := filepath.Abs(pathToFile)
@@ -165,7 +166,7 @@ func AppendObjectToArray[T any](pathToFile string, obj T) error {
 	if err = pathFile.Truncate(0); err != nil {
 		return err
 	}
-	if _, err := pathFile.Seek(0, 0); err != nil { // Move to the beginning of the file
+	if _, err := pathFile.Seek(0, 0); err != nil {
 		return err
 	}
 
@@ -175,5 +176,58 @@ func AppendObjectToArray[T any](pathToFile string, obj T) error {
 	}
 
 	return nil
+}
 
+// AppendObjectToArrayDirect - This will not read the entire file contents to memory, but instead append it directly using writeStrings ig
+// ! Need to fix the indenting issues. Seeking -2 works in some cases, but not during empty file & only brackets situation.
+func AppendObjectToArrayDirect[T any](pathToFile string, obj T) error {
+
+	absPathToFile, _ := filepath.Abs(pathToFile)
+
+	pathFile, err := os.OpenFile(absPathToFile, os.O_RDWR, os.ModePerm)
+	if err != nil {
+		return err
+	}
+
+	defer pathFile.Close()
+
+	stat, err := pathFile.Stat()
+	if err != nil {
+		return err
+	}
+
+	// This is to initialize an array if the file is empty
+	if stat.Size() == 0 {
+		_, err = pathFile.WriteString("[\n")
+		if err != nil {
+			return err
+		}
+	}
+
+	if _, err = pathFile.Seek(-1, io.SeekEnd); err != nil {
+		return err
+	}
+
+	// Adds a comma after the objects already present
+	if stat.Size() > 2 {
+		if _, err = pathFile.WriteString(",\n"); err != nil {
+			return err
+		}
+	}
+
+	newObject, err := json.MarshalIndent(obj, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	if _, err = pathFile.Write(newObject); err != nil {
+		return err
+	}
+
+	// Closing the array
+	if _, err = pathFile.WriteString("\n]"); err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -71,3 +71,30 @@ func TestAppendObjectsToArray(t *testing.T) {
 		t.Error(err)
 	}
 }
+func TestAppendObjectsToArrayDirect(t *testing.T) {
+
+	// Just pulled an object from users instead of creating a new one
+	obj, err := GetObjectFromIndex[models.Users](usersFilePath, 1)
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = AppendObjectToArrayDirect(usersFilePath, obj)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestAppendObjectsToArrayDirectEmptyFile(t *testing.T) {
+
+	// Just pulled an object from users instead of creating a new one
+	obj, err := GetObjectFromIndex[models.Users](usersFilePath, 1)
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = AppendObjectToArrayDirect(trialFilePath, obj)
+	if err != nil {
+		t.Error(err)
+	}
+}
