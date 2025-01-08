@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "name": "The Art of Code",
+    "author": "Jane Doe",
+    "genre": "Programming",
+    "publishedYear": 2020,
+    "isAvailable": true
+  },
+  {
+    "id": 2,
+    "name": "Exploring the Universe",
+    "author": "John Smith",
+    "genre": "Science",
+    "publishedYear": 2018,
+    "isAvailable": false
+  },
+  {
+    "id": 3,
+    "name": "The Mystery of the Blue Diamond",
+    "author": "Agatha Collins",
+    "genre": "Mystery",
+    "publishedYear": 2015,
+    "isAvailable": true
+  },
+  {
+    "id": 4,
+    "name": "Mastering the Art of Cooking",
+    "author": "Gordon White",
+    "genre": "Cooking",
+    "publishedYear": 2022,
+    "isAvailable": true
+  },
+  {
+    "id": 5,
+    "name": "Travel Tales: Around the World",
+    "author": "Emily Green",
+    "genre": "Travel",
+    "publishedYear": 2019,
+    "isAvailable": false
+  },
+  {
+    "id": 6,
+    "name": "Gardening 101",
+    "author": "Alice Bloom",
+    "genre": "Lifestyle",
+    "publishedYear": 2021,
+    "isAvailable": true
+  },
+  {
+    "id": 7,
+    "name": "The Future of AI",
+    "author": "Elon Ray",
+    "genre": "Technology",
+    "publishedYear": 2023,
+    "isAvailable": true
+  },
+  {
+    "id": 8,
+    "name": "History Revisited",
+    "author": "Mark Twain Jr.",
+    "genre": "History",
+    "publishedYear": 2016,
+    "isAvailable": false
+  },
+  {
+    "id": 9,
+    "name": "Fitness for Life",
+    "author": "Chris Strong",
+    "genre": "Health",
+    "publishedYear": 2020,
+    "isAvailable": true
+  },
+  {
+    "id": 10,
+    "name": "The Secrets of the Ocean",
+    "author": "Mary Blue",
+    "genre": "Nature",
+    "publishedYear": 2017,
+    "isAvailable": false
+  }
+]
